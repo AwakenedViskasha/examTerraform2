@@ -1,8 +1,7 @@
 
 provider "aws" {
-  region     = "eu-west-3"
-  access_key = "AKIAUAZADBSFCJIPTVEL" # la clé d’accès crée pour l'utilisateur qui sera utilisé par terraform
-  secret_key = "XylNEunqjeWfk62dBAdp1kl92l/pqx7zQvAxAsY5"
+  shared_config_files      = ["~/.aws/config"]
+  shared_credentials_files = ["~/.aws/credentials"]
 }
 terraform {
   required_providers {

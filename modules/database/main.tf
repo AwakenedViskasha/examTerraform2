@@ -127,7 +127,7 @@ module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
 
-  name = "single-instance"
+  name = "DestroyMeAfterCheckingDB"
 
   ami                         = "ami-05e8e219ac7e82eba"
   instance_type               = "t2.micro"
@@ -136,13 +136,7 @@ module "ec2_instance" {
   vpc_security_group_ids      = [module.networking.sgForPetclinicDB, module.networking.sg_pub_id]
   subnet_id                   = module.networking.vpc.public_subnets[0]
   associate_public_ip_address = true
-
-
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
-  user_data = base64encode(templatefile("./modules/database/user-data.sh", local.vars))
+  user_data                   = base64encode(templatefile("./modules/database/user-data.sh", local.vars))
   depends_on = [
     module.aurora
   ]
