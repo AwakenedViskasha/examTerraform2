@@ -13,17 +13,17 @@ module "aurora" {
     1 = {
       instance_class      = var.instance_class
       publicly_accessible = false
-    }
+    } /*
     2 = {
       identifier     = "mysql-static-1"
       instance_class = var.instance_class
-    }
+    }*/
   }
 
   vpc_id                  = module.networking.vpc.vpc_id
-  subnets                 = module.networking.vpc.private_subnets
+  subnets                 = module.networking.vpc.public_subnets
   allowed_security_groups = [module.networking.sgForPetclinicDB]
-  allowed_cidr_blocks     = module.networking.vpc.private_subnets_cidr_blocks
+  allowed_cidr_blocks     = module.networking.vpc.public_subnets_cidr_blocks
 
   iam_database_authentication_enabled = true
   master_username                     = "admin"
@@ -68,7 +68,7 @@ module "aurora" {
       apply_method = "immediate"
       }, {
       name         = "require_secure_transport"
-      value        = "ON"
+      value        = "OFF"
       apply_method = "immediate"
       }, {
       name         = "tls_version"
@@ -121,4 +121,29 @@ module "aurora" {
   security_group_use_name_prefix  = false
 
   tags = var.tags
+}
+
+module "ec2_instance" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 3.0"
+
+  name = "single-instance"
+
+  ami                         = "ami-05e8e219ac7e82eba"
+  instance_type               = "t2.micro"
+  key_name                    = "PourUserTest2"
+  monitoring                  = true
+  vpc_security_group_ids      = [module.networking.sgForPetclinicDB, module.networking.sg_pub_id]
+  subnet_id                   = module.networking.vpc.public_subnets[0]
+  associate_public_ip_address = true
+
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+  user_data = base64encode(templatefile("./modules/database/user-data.sh", local.vars))
+  depends_on = [
+    module.aurora
+  ]
 }
