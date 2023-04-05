@@ -14,5 +14,8 @@ output "sgForPetclinicDB" {
   value = aws_security_group.sgForPetclinicDB.id
 }
 
+output "forLB" {
+  value = aws_security_group.forLB.id
+}
 
 

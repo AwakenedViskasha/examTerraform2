@@ -1,8 +1,3 @@
-module "networking" {
-  source    = "../networking"
-  namespace = var.namespace
-}
-
 module "aurora" {
   source = "terraform-aws-modules/rds-aurora/aws"
 
@@ -20,10 +15,10 @@ module "aurora" {
     }*/
   }
 
-  vpc_id                  = module.networking.vpc.vpc_id
-  subnets                 = module.networking.vpc.public_subnets
-  allowed_security_groups = [module.networking.sgForPetclinicDB]
-  allowed_cidr_blocks     = module.networking.vpc.public_subnets_cidr_blocks
+  vpc_id                  = var.mod_networking.vpc.vpc_id
+  subnets                 = var.mod_networking.vpc.public_subnets
+  allowed_security_groups = [var.mod_networking.sgForPetclinicDB]
+  allowed_cidr_blocks     = var.mod_networking.vpc.public_subnets_cidr_blocks
 
   iam_database_authentication_enabled = true
   master_username                     = "admin"
@@ -133,8 +128,8 @@ module "ec2_instance" {
   instance_type               = "t2.micro"
   key_name                    = "PourUserTest2"
   monitoring                  = true
-  vpc_security_group_ids      = [module.networking.sgForPetclinicDB, module.networking.sg_pub_id]
-  subnet_id                   = module.networking.vpc.public_subnets[0]
+  vpc_security_group_ids      = [var.mod_networking.sgForPetclinicDB, var.mod_networking.sg_pub_id]
+  subnet_id                   = var.mod_networking.vpc.public_subnets[0]
   associate_public_ip_address = true
   user_data                   = base64encode(templatefile("./modules/database/user-data.sh", local.vars))
   depends_on = [

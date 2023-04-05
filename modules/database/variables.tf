@@ -33,6 +33,10 @@ variable "allowed_cidr_blocks" {
   type    = list(string)
   default = []
 }
+
+variable "mod_networking" {
+  type = any
+}
 locals {
   vars = {
     db_endpoint = "${module.aurora.cluster_endpoint}"
