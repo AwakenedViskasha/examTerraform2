@@ -56,6 +56,7 @@ module "launch-template" {
   image_id                    = "ami-0abf419a9041a930d"
   instance_type               = "t2.micro"
   associate_public_ip_address = true
+  security_groups             = [var.mod_networking.awsSG.sgForPetclinicApp.name]
 }
 
 module "alb" {

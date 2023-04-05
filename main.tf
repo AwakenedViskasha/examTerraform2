@@ -30,7 +30,13 @@ module "database" {
     module.networking
   ]
 }
-
+module "bastion" {
+  source         = "./modules/bastion"
+  namespace      = var.namespace
+  mod_networking = module.networking
+  depends_on = [
+  module.networking]
+}
 module "asg" {
   source         = "./modules/asg"
   namespace      = var.namespace
@@ -41,12 +47,4 @@ module "asg" {
     module.database
   ]
 }
-module "bastion" {
-  source         = "./modules/bastion"
-  namespace      = var.namespace
-  mod_networking = module.networking
-  depends_on = [
-  module.networking]
-}
-
 
