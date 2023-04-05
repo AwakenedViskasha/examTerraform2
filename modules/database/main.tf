@@ -16,9 +16,9 @@ module "aurora" {
   }
 
   vpc_id                  = var.mod_networking.vpc.vpc_id
-  subnets                 = var.mod_networking.vpc.public_subnets
+  subnets                 = var.mod_networking.vpc.private_subnets
   allowed_security_groups = [var.mod_networking.sgForPetclinicDB]
-  allowed_cidr_blocks     = var.mod_networking.vpc.public_subnets_cidr_blocks
+  allowed_cidr_blocks     = setunion(var.mod_networking.vpc.public_subnets_cidr_blocks, var.mod_networking.vpc.private_subnets_cidr_blocks)
 
   iam_database_authentication_enabled = true
   master_username                     = "admin"
@@ -124,14 +124,13 @@ module "ec2_instance" {
 
   name = "DestroyMeAfterCheckingDB"
 
-  ami                         = "ami-05e8e219ac7e82eba"
-  instance_type               = "t2.micro"
-  key_name                    = "PourUserTest2"
-  monitoring                  = true
-  vpc_security_group_ids      = [var.mod_networking.sgForPetclinicDB, var.mod_networking.sg_pub_id]
-  subnet_id                   = var.mod_networking.vpc.public_subnets[0]
-  associate_public_ip_address = true
-  user_data                   = base64encode(templatefile("./modules/database/user-data.sh", local.vars))
+  ami                    = "ami-05e8e219ac7e82eba"
+  instance_type          = "t2.micro"
+  key_name               = "PourUserTest2"
+  monitoring             = true
+  vpc_security_group_ids = [var.mod_networking.sgForPetclinicDB, var.mod_networking.sg_pub_id]
+  subnet_id              = var.mod_networking.vpc.private_subnets[0]
+  user_data              = base64encode(templatefile("./modules/database/user-data.sh", local.vars))
   depends_on = [
     module.aurora
   ]
