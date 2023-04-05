@@ -6,6 +6,6 @@ sudo apt install git -y
 git clone https://github.com/AwakenedViskasha/spring-petclinic
 cd spring-petclinic
 sudo git checkout Deployment-Database-Docker-MySQL
-sudo mysql --host=${db_endpoint}  --port=3306 -u admin -padmin1234 <./deployment/Docker/Database/MySQL/user.sql
+sudo mysql --host=petclinicdb-1.cdsjltzmqrlq.eu-west-3.rds.amazonaws.com --port=3306 -u admin -padmin1234 <./deployment/Docker/Database/MySQL/user.sql
 sudo mysql petclinic --host=${db_endpoint} --port=3306 -u admin -padmin1234 <./deployment/Docker/Database/MySQL/schemas.sql
 sudo mysql petclinic --host=${db_endpoint} --port=3306 -u admin -padmin1234 <./deployment/Docker/Database/MySQL/data.sql

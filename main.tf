@@ -41,7 +41,13 @@ module "asg" {
     module.database
   ]
 }
-
+module "bastion" {
+  source         = "./modules/bastion"
+  namespace      = var.namespace
+  mod_networking = module.networking
+  depends_on = [
+  module.networking]
+}
 locals {
   networking = {
     vpc               = module.networking.vpc
