@@ -48,17 +48,5 @@ module "bastion" {
   depends_on = [
   module.networking]
 }
-locals {
-  networking = {
-    vpc               = module.networking.vpc
-    sg_pub_id         = module.networking.sg_pub_id
-    sgForPetclinicApp = module.networking.sgForPetclinicApp
-    sgForPetclinicDB  = module.networking.sgForPetclinicDB
-  }
-  database = {
-    cluster_endpoint = module.database.cluster_endpoint
-    aurora           = module.database.aurora
-  }
-}
 
 
