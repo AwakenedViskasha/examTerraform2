@@ -81,7 +81,7 @@ resource "aws_security_group" "sgForPetclinicApp" {
 }
 
 resource "aws_security_group" "forLB" {
-  name        = "${var.namespace}-sgForPetclinicApp"
+  name        = "${var.namespace}-forLB"
   description = "Autoriser le trafic entrant SSH"
   vpc_id      = module.vpc.vpc_id
 
