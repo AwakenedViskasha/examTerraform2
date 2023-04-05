@@ -11,7 +11,7 @@ terraform {
     }
   }
 }
-# appel du modules networking lol
+# appel du modules networking
 module "networking" {
   source    = "./modules/networking"
   namespace = var.namespace
